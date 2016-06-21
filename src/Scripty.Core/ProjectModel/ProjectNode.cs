@@ -26,14 +26,14 @@ namespace Scripty.Core.ProjectModel
         {
             get
             {
-                Microsoft.CodeAnalysis.Project analysisProject = _projectTree.Analysis;
+                var analysisProject = _projectTree.Analysis;
                 if (analysisProject == null)
                 {
                     return null;
                 }
 
-                List<string> folders = new List<string>();
-                ProjectNode folderNode = Parent;
+                var folders = new List<string>();
+                var folderNode = Parent;
                 while (folderNode != null)
                 {
                     folders.Add(folderNode.Name);

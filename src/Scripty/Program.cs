@@ -17,14 +17,14 @@ namespace Scripty
         private static int Main(string[] args)
         {
             AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionEvent;
-            Program program = new Program();
+            var program = new Program();
             return program.Run(args);
         }
 
         private static void UnhandledExceptionEvent(object sender, UnhandledExceptionEventArgs e)
         {
             // Exit with a error exit code
-            Exception exception = e.ExceptionObject as Exception;
+            var exception = e.ExceptionObject as Exception;
             if (exception != null)
             {
                 Console.Error.WriteLine(exception.ToString());
@@ -52,8 +52,8 @@ namespace Scripty
             }
 
             // Setup all the script sources and evaluation tasks
-            ScriptEngine engine = new ScriptEngine(_settings.ProjectFilePath);
-            ConcurrentBag<Task<ScriptResult>> tasks = new ConcurrentBag<Task<ScriptResult>>();
+            var engine = new ScriptEngine(_settings.ProjectFilePath);
+            var tasks = new ConcurrentBag<Task<ScriptResult>>();
             Parallel.ForEach(_settings.ScriptFilePaths
                 .Select(x => Path.Combine(Path.GetDirectoryName(_settings.ProjectFilePath), x))
                 .Where(x => !string.IsNullOrEmpty(x))
@@ -73,23 +73,23 @@ namespace Scripty
             }
             catch (AggregateException aggregateException)
             {
-                foreach (Exception ex in aggregateException.InnerExceptions)
+                foreach (var ex in aggregateException.InnerExceptions)
                 {
                     Console.Error.WriteLine(ex.ToString());
                 }
             }
 
             // Iterate over the completed tasks
-            foreach (Task<ScriptResult> task in tasks.Where(x => x.Status == TaskStatus.RanToCompletion))
+            foreach (var task in tasks.Where(x => x.Status == TaskStatus.RanToCompletion))
             {
                 // Check for any errors
-                foreach (ScriptError error in task.Result.Errors)
+                foreach (var error in task.Result.Errors)
                 {
                     Console.Error.WriteLine($"{error.Message} [{error.Line},{error.Column}]");
                 }
 
                 // Output the set of generated files w/ build actions
-                foreach (IOutputFileInfo outputFile in task.Result.OutputFiles)
+                foreach (var outputFile in task.Result.OutputFiles)
                 {
                     Console.WriteLine($"{outputFile.BuildAction}|{outputFile.FilePath}");
                 }

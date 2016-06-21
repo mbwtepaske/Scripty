@@ -57,7 +57,7 @@ namespace Scripty.Core.ProjectModel
                 if(_nodes == null)
                 {
                     _nodes = new ProjectNodes(this, null);
-                    Microsoft.Build.Evaluation.Project buildProject = Build;
+                    var buildProject = Build;
                     if(buildProject != null)
                     {
                         var groups = buildProject.AllEvaluatedItems
@@ -77,12 +77,12 @@ namespace Scripty.Core.ProjectModel
                         {
                             string[] segments = group.Key.Split(
                                 Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-                            ProjectNodes current = _nodes;
+                            var current = _nodes;
                             if (segments.Length > 1 || !string.IsNullOrEmpty(segments[0]))
                             {
-                                foreach (string segment in segments)
+                                foreach (var segment in segments)
                                 {
-                                    ProjectNode folderNode = current.GetOrAdd(segment);
+                                    var folderNode = current.GetOrAdd(segment);
                                     current = folderNode.Children;
                                 }
                             }

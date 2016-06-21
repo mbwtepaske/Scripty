@@ -75,7 +75,7 @@ namespace Scripty
             codeFileNameSpace = wszDefaultNamespace;
             codeGeneratorProgress = pGenerateProgress;
 
-            byte[] bytes = GenerateCode(bstrInputFileContents);
+            var bytes = GenerateCode(bstrInputFileContents);
 
             if (bytes == null)
             {
@@ -93,7 +93,7 @@ namespace Scripty
                 // memory allocated via CoTaskMemAlloc(). Therefore, we have to convert the 
                 // byte[] array returned from GenerateCode() into an unmanaged blob.  
 
-                int outputLength = bytes.Length;
+                var outputLength = bytes.Length;
                 rgbOutputFileContents[0] = Marshal.AllocCoTaskMem(outputLength);
                 Marshal.Copy(bytes, 0, rgbOutputFileContents[0], outputLength);
                 pcbOutput = (uint)outputLength;
@@ -158,7 +158,7 @@ namespace Scripty
         /// <param name="column">Column number of error</param>
         protected virtual void GeneratorError(uint level, string message, uint line, uint column)
         {
-            IVsGeneratorProgress progress = CodeGeneratorProgress;
+            var progress = CodeGeneratorProgress;
             if (progress != null)
             {
                 progress.GeneratorError(0, level, message, line, column);
@@ -174,7 +174,7 @@ namespace Scripty
         /// <param name="column">Column number of warning</param>
         protected virtual void GeneratorWarning(uint level, string message, uint line, uint column)
         {
-            IVsGeneratorProgress progress = CodeGeneratorProgress;
+            var progress = CodeGeneratorProgress;
             if (progress != null)
             {
                 progress.GeneratorError(1, level, message, line, column);

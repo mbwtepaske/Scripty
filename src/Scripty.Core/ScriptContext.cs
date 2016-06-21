@@ -1,43 +1,59 @@
 using System;
 using System.IO;
-using Microsoft.CodeAnalysis.MSBuild;
+
 using Scripty.Core.Output;
 using Scripty.Core.ProjectModel;
 
 namespace Scripty.Core
 {
-    public class ScriptContext : IDisposable
+  public class ScriptContext : IDisposable
+  {
+    internal ScriptContext(string scriptFilePath, string projectFilePath, ProjectTree projectTree)
     {
-        internal ScriptContext(string scriptFilePath, string projectFilePath, ProjectTree projectTree)
-        {
-            if (string.IsNullOrEmpty(scriptFilePath))
-            {
-                throw new ArgumentException("Value cannot be null or empty", nameof(scriptFilePath));
-            }
-            if (!Path.IsPathRooted(scriptFilePath))
-            {
-                throw new ArgumentException("The script file path must be absolute");
-            }
+      if (string.IsNullOrEmpty(scriptFilePath))
+      {
+        throw new ArgumentException("Value cannot be null or empty", nameof(scriptFilePath));
+      }
 
-            ScriptFilePath = scriptFilePath;
-            ProjectFilePath = projectFilePath;
-            ProjectTree = projectTree;
-            Output = new OutputFileCollection(scriptFilePath);
-        }
+      if (!Path.IsPathRooted(scriptFilePath))
+      {
+        throw new ArgumentException("The script file path must be absolute");
+      }
 
-        public void Dispose()
-        {
-            Output.Dispose();
-        }
-
-        public ScriptContext Context => this;
-
-        public string ScriptFilePath { get; }
-
-        public string ProjectFilePath { get; }
-
-        public ProjectTree ProjectTree { get; }
-
-        public OutputFileCollection Output { get; }
+      Output = new OutputFileCollection(scriptFilePath);
+      ProjectFilePath = projectFilePath;
+      ProjectTree = projectTree;
+      ScriptFilePath = scriptFilePath;
     }
+
+    public string Content
+    {
+      get;
+      set;
+    }
+
+    public ScriptContext Context => this;
+
+    public OutputFileCollection Output
+    {
+      get;
+    }
+
+    public string ProjectFilePath
+    {
+      get;
+    }
+
+    public ProjectTree ProjectTree
+    {
+      get;
+    }
+
+    public string ScriptFilePath
+    {
+      get;
+    }
+
+    public void Dispose() => Output.Dispose();
+  }
 }
